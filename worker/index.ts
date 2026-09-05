@@ -14,14 +14,12 @@ interface StoredResource {
 interface ResourceBucket {
   head(key: string): Promise<StoredResource | null>;
   get(key: string, options?: { onlyIf?: Headers; range?: Headers }): Promise<StoredResource | null>;
-  delete(key: string): Promise<void>;
 }
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
   DB: unknown;
   RESOURCES?: ResourceBucket;
-  RESOURCE_TAKEDOWN_TOKEN?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -88,22 +86,6 @@ async function serveResource(request: Request, env: Env, url: URL) {
   return new Response(object.body, { status, headers });
 }
 
-const APPROVED_TAKEDOWN_KEYS = [
-  "resources/database-basics/349112d051f375f3075dde49.pdf",
-  "resources/database-basics/f22bdb16844b747046c8887b.pdf",
-] as const;
-
-async function performApprovedTakedown(request: Request, env: Env) {
-  if (request.method !== "POST" || !env.RESOURCES || !env.RESOURCE_TAKEDOWN_TOKEN) {
-    return new Response("Not found", { status: 404 });
-  }
-  if (request.headers.get("authorization") !== `Bearer ${env.RESOURCE_TAKEDOWN_TOKEN}`) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-  await Promise.all(APPROVED_TAKEDOWN_KEYS.map((key) => env.RESOURCES!.delete(key)));
-  return Response.json({ deleted: APPROVED_TAKEDOWN_KEYS.length });
-}
-
 interface ExecutionContext {
   waitUntil(promise: Promise<unknown>): void;
   passThroughOnException(): void;
@@ -131,7 +113,6 @@ const worker = {
     }
 
     if (url.pathname.startsWith("/files/")) return serveResource(request, env, url);
-    if (url.pathname === "/__approved-takedown-20260905") return performApprovedTakedown(request, env);
 
     return handler.fetch(request, env, ctx);
   },
