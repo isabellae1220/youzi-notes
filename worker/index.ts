@@ -2,8 +2,6 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 
-type UploadedPart = { partNumber: number; etag: string };
-
 interface StoredResource {
   body?: ReadableStream;
   size: number;
@@ -13,26 +11,15 @@ interface StoredResource {
   writeHttpMetadata(headers: Headers): void;
 }
 
-interface MultipartResourceUpload {
-  uploadId: string;
-  uploadPart(partNumber: number, body: ReadableStream): Promise<UploadedPart>;
-  complete(parts: UploadedPart[]): Promise<StoredResource>;
-  abort(): Promise<void>;
-}
-
 interface ResourceBucket {
   head(key: string): Promise<StoredResource | null>;
   get(key: string, options?: { onlyIf?: Headers; range?: Headers }): Promise<StoredResource | null>;
-  createMultipartUpload(key: string, options?: Record<string, unknown>): Promise<MultipartResourceUpload>;
-  resumeMultipartUpload(key: string, uploadId: string): MultipartResourceUpload;
-  delete(key: string): Promise<void>;
 }
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
   DB: unknown;
   RESOURCES?: ResourceBucket;
-  RESOURCE_UPLOAD_TOKEN?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -99,61 +86,6 @@ async function serveResource(request: Request, env: Env, url: URL) {
   return new Response(object.body, { status, headers });
 }
 
-async function uploadResource(request: Request, env: Env, url: URL) {
-  if (!env.RESOURCES || !env.RESOURCE_UPLOAD_TOKEN) return new Response("Not found", { status: 404 });
-  if (request.headers.get("authorization") !== `Bearer ${env.RESOURCE_UPLOAD_TOKEN}`) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-  const key = objectKey(url.pathname, "/__resource-upload/");
-  if (!safeResourceKey(key)) return new Response("Invalid key", { status: 400 });
-  const action = url.searchParams.get("action");
-
-  try {
-    if (request.method === "POST" && action === "create") {
-      const metadata = await request.json() as { fileName?: string; sha256?: string };
-      const fileName = metadata.fileName || "resource.pdf";
-      const upload = await env.RESOURCES.createMultipartUpload(key, {
-        httpMetadata: {
-          contentType: "application/pdf",
-          contentDisposition: `inline; filename*=UTF-8''${encodeURIComponent(fileName)}`,
-          cacheControl: "public, max-age=31536000, immutable",
-        },
-        customMetadata: metadata.sha256 ? { sha256: metadata.sha256 } : undefined,
-      });
-      return Response.json({ uploadId: upload.uploadId });
-    }
-
-    if (request.method === "DELETE" && action === "delete") {
-      await env.RESOURCES.delete(key);
-      return new Response(null, { status: 204 });
-    }
-
-    const uploadId = url.searchParams.get("uploadId");
-    if (!uploadId) return new Response("Missing uploadId", { status: 400 });
-    const upload = env.RESOURCES.resumeMultipartUpload(key, uploadId);
-
-    if (request.method === "PUT" && action === "part") {
-      const partNumber = Number(url.searchParams.get("partNumber"));
-      if (!request.body || !Number.isInteger(partNumber) || partNumber < 1) {
-        return new Response("Invalid part", { status: 400 });
-      }
-      return Response.json(await upload.uploadPart(partNumber, request.body));
-    }
-    if (request.method === "POST" && action === "complete") {
-      const { parts } = await request.json() as { parts: UploadedPart[] };
-      const object = await upload.complete(parts);
-      return Response.json({ etag: object.httpEtag, size: object.size });
-    }
-    if (request.method === "DELETE" && action === "abort") {
-      await upload.abort();
-      return new Response(null, { status: 204 });
-    }
-    return new Response("Unknown action", { status: 400 });
-  } catch (error) {
-    return new Response(error instanceof Error ? error.message : "Upload failed", { status: 400 });
-  }
-}
-
 interface ExecutionContext {
   waitUntil(promise: Promise<unknown>): void;
   passThroughOnException(): void;
@@ -181,7 +113,6 @@ const worker = {
     }
 
     if (url.pathname.startsWith("/files/")) return serveResource(request, env, url);
-    if (url.pathname.startsWith("/__resource-upload/")) return uploadResource(request, env, url);
 
     return handler.fetch(request, env, ctx);
   },
