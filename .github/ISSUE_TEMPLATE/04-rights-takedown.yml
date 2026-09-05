@@ -1,0 +1,48 @@
+name: 权利声明或下架申请
+description: 提交版权、隐私、考试公平或其他内容下架请求
+title: "[权利与下架] "
+labels: ["权利声明", "优先处理"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        我们会优先处理合理的权利与隐私异议。请只提供核实所需的信息，不要在公开 Issue 中披露身份证件、学号、联系方式等敏感信息。
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: 申请类型
+      options:
+        - 版权或授权问题
+        - 个人隐私问题
+        - 考试公平问题
+        - 内容错误或不当
+        - 其他
+    validations:
+      required: true
+  - type: input
+    id: content-location
+    attributes:
+      label: 涉及内容
+      description: 请填写页面地址、课程名称或资料标题。
+    validations:
+      required: true
+  - type: textarea
+    id: relationship
+    attributes:
+      label: 你与内容的关系
+      description: 请简要说明你是作者、权利人、被识别个人或其他相关方。无需公开提交敏感证明材料。
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: 申请理由与期望处理方式
+    validations:
+      required: true
+  - type: checkboxes
+    id: accuracy
+    attributes:
+      label: 声明确认
+      options:
+        - label: 我确认以上说明真实，并愿意在需要时通过非公开方式配合核实。
+          required: true

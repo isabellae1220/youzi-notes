@@ -1,0 +1,37 @@
+name: 错误反馈
+description: 报告资料内容、课程信息、页面显示或网站功能问题
+title: "[错误反馈] "
+labels: ["错误反馈"]
+body:
+  - type: dropdown
+    id: problem-type
+    attributes:
+      label: 问题类型
+      options:
+        - 资料内容有误
+        - 课程或资料信息有误
+        - 页面显示问题
+        - 网站功能问题
+        - 链接失效
+        - 其他
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: 问题位置
+      description: 请填写页面地址、课程名称或资料标题。
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 问题说明
+      description: 请描述你看到的内容、预期内容，以及可以帮助复现或核对的信息。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 补充依据或截图
+      description: 如涉及内容勘误，请尽量提供可核对的依据；截图前请遮挡个人信息。

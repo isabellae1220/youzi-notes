@@ -1,0 +1,36 @@
+name: 新增课程
+description: 建议收录一门已有可公开资料的课程
+title: "[新增课程] "
+labels: ["课程建议"]
+body:
+  - type: input
+    id: course
+    attributes:
+      label: 课程名称
+    validations:
+      required: true
+  - type: input
+    id: college
+    attributes:
+      label: 所属学院
+    validations:
+      required: true
+  - type: textarea
+    id: existing-resources
+    attributes:
+      label: 已有资料
+      description: 请说明目前真实存在且确认可以公开的资料。没有实际资料时暂不创建空课程。
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: 其他说明
+      description: 可补充课程简介、资料来源或愿意参与整理的方式。
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: 确认
+      options:
+        - label: 我确认建议基于真实存在且可能公开的资料，不是仅创建空分类。
+          required: true
