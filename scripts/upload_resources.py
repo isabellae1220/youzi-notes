@@ -18,7 +18,10 @@ PART_SIZE = 16 * 1024 * 1024
 
 
 def request(url: str, token: str, method: str, body: bytes | None = None, content_type: str | None = None):
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "User-Agent": "Mozilla/5.0 (compatible; YuzuNotesUploader/1.0)",
+    }
     if content_type:
         headers["Content-Type"] = content_type
     req = urllib.request.Request(url, data=body, headers=headers, method=method)
@@ -37,7 +40,11 @@ def upload_url(base_url: str, key: str, **params: object) -> str:
 
 
 def already_uploaded(base_url: str, item: dict[str, object]) -> bool:
-    req = urllib.request.Request(public_url(base_url, str(item["objectKey"])), method="HEAD")
+    req = urllib.request.Request(
+        public_url(base_url, str(item["objectKey"])),
+        method="HEAD",
+        headers={"User-Agent": "Mozilla/5.0 (compatible; YuzuNotesUploader/1.0)"},
+    )
     try:
         with urllib.request.urlopen(req, timeout=60) as response:
             return response.headers.get("x-content-sha256") == item["sha256"]

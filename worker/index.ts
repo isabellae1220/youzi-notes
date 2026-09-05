@@ -25,6 +25,7 @@ interface ResourceBucket {
   get(key: string, options?: { onlyIf?: Headers; range?: Headers }): Promise<StoredResource | null>;
   createMultipartUpload(key: string, options?: Record<string, unknown>): Promise<MultipartResourceUpload>;
   resumeMultipartUpload(key: string, uploadId: string): MultipartResourceUpload;
+  delete(key: string): Promise<void>;
 }
 
 interface Env {
@@ -120,6 +121,11 @@ async function uploadResource(request: Request, env: Env, url: URL) {
         customMetadata: metadata.sha256 ? { sha256: metadata.sha256 } : undefined,
       });
       return Response.json({ uploadId: upload.uploadId });
+    }
+
+    if (request.method === "DELETE" && action === "delete") {
+      await env.RESOURCES.delete(key);
+      return new Response(null, { status: 204 });
     }
 
     const uploadId = url.searchParams.get("uploadId");
