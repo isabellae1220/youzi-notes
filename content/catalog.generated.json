@@ -17,20 +17,12 @@
       "accent": "apricot"
     },
     {
-      "id": "database-basics",
-      "name": "数据库基础",
+      "id": "database-systems",
+      "name": "数据库系统",
       "college": "计算机学院",
-      "description": "数据库基础概念、章节习题与试卷。",
+      "description": "数据库笔记、试卷与实验资料。",
       "icon": "DB",
       "accent": "purple"
-    },
-    {
-      "id": "database-systems",
-      "name": "数据库系统基础",
-      "college": "计算机学院",
-      "description": "数据库实验报告与课程整理。",
-      "icon": "DBS",
-      "accent": "green"
     },
     {
       "id": "data-structures",
@@ -413,8 +405,8 @@
       "sourceRelativePath": "操作系统/课后习题答案.pdf"
     },
     {
-      "id": "database-basics-335a150050119164",
-      "courseId": "database-basics",
+      "id": "database-systems-335a150050119164",
+      "courseId": "database-systems",
       "title": "数据库笔记",
       "type": "note",
       "description": "同学整理的课程笔记",
@@ -427,8 +419,8 @@
       "sourceRelativePath": "数据库基础/数据库笔记.pdf"
     },
     {
-      "id": "database-basics-f7c019ef52431d23",
-      "courseId": "database-basics",
+      "id": "database-systems-f7c019ef52431d23",
+      "courseId": "database-systems",
       "title": "数据库系统2022-2023-2",
       "type": "summary",
       "description": "课程复习与参考资料",
@@ -441,8 +433,8 @@
       "sourceRelativePath": "数据库基础/数据库系统2022-2023-2.pdf"
     },
     {
-      "id": "database-basics-42170b7a0d6af668",
-      "courseId": "database-basics",
+      "id": "database-systems-42170b7a0d6af668",
+      "courseId": "database-systems",
       "title": "数据库系统基础 25-26 第一学期 2",
       "type": "summary",
       "description": "课程复习与参考资料",
@@ -455,8 +447,8 @@
       "sourceRelativePath": "数据库基础/数据库系统基础 25-26 第一学期 2.pdf"
     },
     {
-      "id": "database-basics-c92f7a5405e5297f",
-      "courseId": "database-basics",
+      "id": "database-systems-c92f7a5405e5297f",
+      "courseId": "database-systems",
       "title": "数据库系统基础 25-26 第一学期",
       "type": "summary",
       "description": "课程复习与参考资料",
@@ -467,34 +459,6 @@
       "size": 443968,
       "sha256": "c92f7a5405e5297f881cc04274f1aa8bbe7f198d29c612e1a89be72f62c40abe",
       "sourceRelativePath": "数据库基础/数据库系统基础 25-26 第一学期.pdf"
-    },
-    {
-      "id": "database-basics-349112d051f375f3",
-      "courseId": "database-basics",
-      "title": "第10-12章_习题",
-      "type": "exercise",
-      "description": "章节习题与练习资料",
-      "format": "pdf",
-      "updatedAt": "06.28",
-      "objectKey": "resources/database-basics/349112d051f375f3075dde49.pdf",
-      "fileName": "第10-12章_习题.pdf",
-      "size": 52784,
-      "sha256": "349112d051f375f3075dde49e05b9cb02290851a8bd0010f69d25b235e55f2ef",
-      "sourceRelativePath": "数据库基础/第10-12章_习题.pdf"
-    },
-    {
-      "id": "database-basics-f22bdb16844b7470",
-      "courseId": "database-basics",
-      "title": "第8-9章_习题",
-      "type": "exercise",
-      "description": "章节习题与练习资料",
-      "format": "pdf",
-      "updatedAt": "06.28",
-      "objectKey": "resources/database-basics/f22bdb16844b747046c8887b.pdf",
-      "fileName": "第8-9章_习题.pdf",
-      "size": 56011,
-      "sha256": "f22bdb16844b747046c8887b9551e67394213484a5f62b9c806b01f019053115",
-      "sourceRelativePath": "数据库基础/第8-9章_习题.pdf"
     },
     {
       "id": "database-systems-f4c3731e2d3a6400",

@@ -13,8 +13,8 @@ OUTPUT = Path(__file__).resolve().parents[1] / "content" / "catalog.generated.js
 COURSES = {
     "c++": ("cpp", "C++ 程序设计", "计算机学院", "C++", "rose", "语法、面向对象与期末复习资料。"),
     "操作系统": ("operating-systems", "操作系统", "计算机学院", "OS", "apricot", "进程、同步、存储与文件系统资料。"),
-    "数据库基础": ("database-basics", "数据库基础", "计算机学院", "DB", "purple", "数据库基础概念、章节习题与试卷。"),
-    "数据库系统基础": ("database-systems", "数据库系统基础", "计算机学院", "DBS", "green", "数据库实验报告与课程整理。"),
+    "数据库基础": ("database-systems", "数据库系统", "计算机学院", "DB", "purple", "数据库笔记、试卷与实验资料。", "database-basics"),
+    "数据库系统基础": ("database-systems", "数据库系统", "计算机学院", "DB", "purple", "数据库笔记、试卷与实验资料。", "database-systems"),
     "数据结构": ("data-structures", "数据结构", "计算机学院", "DS", "rose", "数据结构笔记、复习材料与历年试卷。"),
     "算法分析与设计": ("algorithm-analysis", "算法分析与设计", "计算机学院", "ALG", "apricot", "算法章节复习、实验报告与试卷。"),
     "计算机系统基础": ("computer-systems", "计算机系统基础", "计算机学院", "CS", "purple", "系统基础复习、速查表与实验报告。"),
@@ -29,6 +29,11 @@ COURSES = {
     "数电": ("digital-electronics", "数字电路", "电子与光学工程学院", "DE", "green", "数字电路复习、习题解答与历年试卷。"),
     "马原": ("marxism-principles", "马克思主义基本原理", "马克思主义学院", "MARX", "rose", "课程重点与期末复习资料。"),
     "应用文写作": ("practical-writing", "应用文写作", "公共课程", "WRITE", "apricot", "应用文写作参考资料。"),
+}
+
+EXCLUDED_SOURCE_RELATIVE_PATHS = {
+    "数据库基础/第10-12章_习题.pdf",
+    "数据库基础/第8-9章_习题.pdf",
 }
 
 
@@ -64,11 +69,12 @@ def description(kind: str) -> str:
 
 
 def main() -> None:
-    courses = []
+    courses_by_id = {}
     resources = []
     for folder, values in COURSES.items():
-        course_id, name, college, icon, accent, course_description = values
-        courses.append(
+        course_id, name, college, icon, accent, course_description, *storage_prefix = values
+        courses_by_id.setdefault(
+            course_id,
             {
                 "id": course_id,
                 "name": name,
@@ -76,12 +82,16 @@ def main() -> None:
                 "description": course_description,
                 "icon": icon,
                 "accent": accent,
-            }
+            },
         )
         for path in sorted((SOURCE / folder).rglob("*.pdf")):
+            source_relative = str(path.relative_to(SOURCE))
+            if source_relative in EXCLUDED_SOURCE_RELATIVE_PATHS:
+                continue
             relative = path.relative_to(SOURCE / folder)
             digest = sha256(path)
             kind = resource_type(relative)
+            object_prefix = storage_prefix[0] if storage_prefix else course_id
             resources.append(
                 {
                     "id": f"{course_id}-{digest[:16]}",
@@ -91,20 +101,20 @@ def main() -> None:
                     "description": description(kind),
                     "format": "pdf",
                     "updatedAt": datetime.fromtimestamp(path.stat().st_mtime).strftime("%m.%d"),
-                    "objectKey": f"resources/{course_id}/{digest[:24]}.pdf",
+                    "objectKey": f"resources/{object_prefix}/{digest[:24]}.pdf",
                     "fileName": path.name,
                     "size": path.stat().st_size,
                     "sha256": digest,
-                    "sourceRelativePath": str(path.relative_to(SOURCE)),
+                    "sourceRelativePath": source_relative,
                 }
             )
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(
-        json.dumps({"courses": courses, "resources": resources}, ensure_ascii=False, indent=2) + "\n",
+        json.dumps({"courses": list(courses_by_id.values()), "resources": resources}, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(f"courses={len(courses)} resources={len(resources)} output={OUTPUT}")
+    print(f"courses={len(courses_by_id)} resources={len(resources)} output={OUTPUT}")
 
 
 if __name__ == "__main__":
