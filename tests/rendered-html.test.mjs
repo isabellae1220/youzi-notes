@@ -62,5 +62,7 @@ test("renders the contribution guide", async () => {
   assert.match(html, /提交 Issue/);
   assert.match(html, /创建 Pull Request/);
   assert.match(html, /权利声明或下架/);
-  assert.match(html, /仓库地址确定后/);
+  assert.match(html, /github\.com\/isabellae1220\/youzi-notes\/issues\/new\?template=01-resource-submission\.yml/);
+  assert.match(html, /github\.com\/isabellae1220\/youzi-notes\/issues\/new\?template=04-rights-takedown\.yml/);
+  assert.doesNotMatch(html, /仓库地址确定后/);
 });

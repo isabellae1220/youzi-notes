@@ -1,30 +1,36 @@
 import { PageContainer } from "../components/PageContainer";
 import { SiteHeader } from "../components/SiteHeader";
 
+const githubRepositoryUrl = "https://github.com/isabellae1220/youzi-notes";
+
 const issueTypes = [
   {
     number: "01",
     title: "投稿资料",
     description: "提交你有权公开的原创笔记、复习总结、习题或实验资料。",
     tone: "tone-pink",
+    template: "01-resource-submission.yml",
   },
   {
     number: "02",
     title: "错误反馈",
     description: "报告页面、课程信息或资料内容中的错误，也可以反馈网站 Bug。",
     tone: "tone-apricot",
+    template: "02-error-report.yml",
   },
   {
     number: "03",
     title: "新增课程",
     description: "建议收录一门课程，并说明目前真实存在且可以公开的资料。",
     tone: "tone-purple",
+    template: "03-course-request.yml",
   },
   {
     number: "04",
     title: "权利声明或下架",
     description: "权利人可提交版权、隐私或下架申请，相关内容会被优先暂停公开并核实。",
     tone: "tone-green",
+    template: "04-rights-takedown.yml",
   },
 ];
 
@@ -58,16 +64,20 @@ export default function ContributePage() {
       <PageContainer as="section" id="issue-types" className="issue-section">
         <div className="section-heading">
           <div><span className="kicker">ISSUE TEMPLATES</span><h2>你想提交什么？</h2></div>
-          <p>仓库地址确定后，这里会连接到对应的 GitHub 表单。</p>
+          <p>选择类型后，会直接打开对应的 GitHub 表单。</p>
         </div>
         <div className="issue-grid">
           {issueTypes.map((item) => (
-            <article className={`issue-card ${item.tone}`} key={item.number}>
+            <a
+              className={`issue-card ${item.tone}`}
+              href={`${githubRepositoryUrl}/issues/new?template=${item.template}`}
+              key={item.number}
+            >
               <span>{item.number}</span>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
-              <small>Issue 模板已准备</small>
-            </article>
+              <small>打开 Issue 表单 →</small>
+            </a>
           ))}
         </div>
       </PageContainer>
@@ -79,10 +89,10 @@ export default function ContributePage() {
           <p>适合愿意使用 Git 的贡献者。请保持页面与内容数据分离，并只提交真实存在且确认可以公开的资料。</p>
         </div>
         <ol>
-          <li><span>01</span><p><b>Fork 并新建分支</b><small>让每次修改保持单一、清晰。</small></p></li>
+          <li><span>01</span><p><b><a href={`${githubRepositoryUrl}/fork`}>Fork 并新建分支</a></b><small>让每次修改保持单一、清晰。</small></p></li>
           <li><span>02</span><p><b>按内容规范修改</b><small>课程数据、笔记、文档或代码都可以。</small></p></li>
           <li><span>03</span><p><b>完成公开前检查</b><small>确认版权、隐私、来源和文件信息。</small></p></li>
-          <li><span>04</span><p><b>提交 Pull Request</b><small>说明修改内容和验证方式，等待审核。</small></p></li>
+          <li><span>04</span><p><b><a href={`${githubRepositoryUrl}/compare`}>提交 Pull Request</a></b><small>说明修改内容和验证方式，等待审核。</small></p></li>
         </ol>
       </PageContainer>
 
