@@ -2,9 +2,36 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 
+type UploadedPart = { partNumber: number; etag: string };
+
+interface StoredResource {
+  body?: ReadableStream;
+  size: number;
+  httpEtag: string;
+  range?: { offset?: number; length?: number };
+  customMetadata?: Record<string, string>;
+  writeHttpMetadata(headers: Headers): void;
+}
+
+interface MultipartResourceUpload {
+  uploadId: string;
+  uploadPart(partNumber: number, body: ReadableStream): Promise<UploadedPart>;
+  complete(parts: UploadedPart[]): Promise<StoredResource>;
+  abort(): Promise<void>;
+}
+
+interface ResourceBucket {
+  head(key: string): Promise<StoredResource | null>;
+  get(key: string, options?: { onlyIf?: Headers; range?: Headers }): Promise<StoredResource | null>;
+  createMultipartUpload(key: string, options?: Record<string, unknown>): Promise<MultipartResourceUpload>;
+  resumeMultipartUpload(key: string, uploadId: string): MultipartResourceUpload;
+}
+
 interface Env {
-  ASSETS: Fetcher;
-  DB: D1Database;
+  ASSETS: { fetch(request: Request): Promise<Response> };
+  DB: unknown;
+  RESOURCES?: ResourceBucket;
+  RESOURCE_UPLOAD_TOKEN?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -12,6 +39,113 @@ interface Env {
       };
     };
   };
+}
+
+function objectKey(pathname: string, prefix: string) {
+  const encoded = pathname.slice(prefix.length);
+  try {
+    return encoded.split("/").map(decodeURIComponent).join("/");
+  } catch {
+    return "";
+  }
+}
+
+function safeResourceKey(key: string) {
+  return key.startsWith("resources/") && !key.includes("..") && !key.includes("\\");
+}
+
+async function serveResource(request: Request, env: Env, url: URL) {
+  if (!env.RESOURCES) return new Response("Storage unavailable", { status: 503 });
+  const key = objectKey(url.pathname, "/files/");
+  if (!safeResourceKey(key)) return new Response("Not found", { status: 404 });
+
+  if (request.method === "HEAD") {
+    const object = await env.RESOURCES.head(key);
+    if (!object) return new Response(null, { status: 404 });
+    const headers = new Headers();
+    object.writeHttpMetadata(headers);
+    headers.set("content-length", String(object.size));
+    headers.set("etag", object.httpEtag);
+    headers.set("accept-ranges", "bytes");
+    headers.set("cache-control", "public, max-age=31536000, immutable");
+    if (object.customMetadata?.sha256) headers.set("x-content-sha256", object.customMetadata.sha256);
+    return new Response(null, { headers });
+  }
+
+  if (request.method !== "GET") return new Response("Method not allowed", { status: 405 });
+  const object = await env.RESOURCES.get(key, { onlyIf: request.headers, range: request.headers });
+  if (!object) return new Response("Not found", { status: 404 });
+  if (!("body" in object)) return new Response(null, { status: 412 });
+
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  headers.set("etag", object.httpEtag);
+  headers.set("accept-ranges", "bytes");
+  headers.set("cache-control", "public, max-age=31536000, immutable");
+  let status = 200;
+  if (object.range && "offset" in object.range && typeof object.range.offset === "number") {
+    const length = object.range.length ?? object.size - object.range.offset;
+    headers.set("content-range", `bytes ${object.range.offset}-${object.range.offset + length - 1}/${object.size}`);
+    headers.set("content-length", String(length));
+    status = 206;
+  } else {
+    headers.set("content-length", String(object.size));
+  }
+  if (url.searchParams.get("download") === "1") {
+    const name = url.searchParams.get("name") || "resource.pdf";
+    headers.set("content-disposition", `attachment; filename*=UTF-8''${encodeURIComponent(name)}`);
+  }
+  return new Response(object.body, { status, headers });
+}
+
+async function uploadResource(request: Request, env: Env, url: URL) {
+  if (!env.RESOURCES || !env.RESOURCE_UPLOAD_TOKEN) return new Response("Not found", { status: 404 });
+  if (request.headers.get("authorization") !== `Bearer ${env.RESOURCE_UPLOAD_TOKEN}`) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  const key = objectKey(url.pathname, "/__resource-upload/");
+  if (!safeResourceKey(key)) return new Response("Invalid key", { status: 400 });
+  const action = url.searchParams.get("action");
+
+  try {
+    if (request.method === "POST" && action === "create") {
+      const metadata = await request.json() as { fileName?: string; sha256?: string };
+      const fileName = metadata.fileName || "resource.pdf";
+      const upload = await env.RESOURCES.createMultipartUpload(key, {
+        httpMetadata: {
+          contentType: "application/pdf",
+          contentDisposition: `inline; filename*=UTF-8''${encodeURIComponent(fileName)}`,
+          cacheControl: "public, max-age=31536000, immutable",
+        },
+        customMetadata: metadata.sha256 ? { sha256: metadata.sha256 } : undefined,
+      });
+      return Response.json({ uploadId: upload.uploadId });
+    }
+
+    const uploadId = url.searchParams.get("uploadId");
+    if (!uploadId) return new Response("Missing uploadId", { status: 400 });
+    const upload = env.RESOURCES.resumeMultipartUpload(key, uploadId);
+
+    if (request.method === "PUT" && action === "part") {
+      const partNumber = Number(url.searchParams.get("partNumber"));
+      if (!request.body || !Number.isInteger(partNumber) || partNumber < 1) {
+        return new Response("Invalid part", { status: 400 });
+      }
+      return Response.json(await upload.uploadPart(partNumber, request.body));
+    }
+    if (request.method === "POST" && action === "complete") {
+      const { parts } = await request.json() as { parts: UploadedPart[] };
+      const object = await upload.complete(parts);
+      return Response.json({ etag: object.httpEtag, size: object.size });
+    }
+    if (request.method === "DELETE" && action === "abort") {
+      await upload.abort();
+      return new Response(null, { status: 204 });
+    }
+    return new Response("Unknown action", { status: 400 });
+  } catch (error) {
+    return new Response(error instanceof Error ? error.message : "Upload failed", { status: 400 });
+  }
 }
 
 interface ExecutionContext {
@@ -39,6 +173,9 @@ const worker = {
         },
       }, allowedWidths);
     }
+
+    if (url.pathname.startsWith("/files/")) return serveResource(request, env, url);
+    if (url.pathname.startsWith("/__resource-upload/")) return uploadResource(request, env, url);
 
     return handler.fetch(request, env, ctx);
   },

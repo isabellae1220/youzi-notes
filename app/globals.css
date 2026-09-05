@@ -584,8 +584,6 @@ a:focus-visible, button:focus-visible {
 .resource-main small { color: #625a56; line-height: 1.5; }
 .resource-date { align-self: start; color: #625a56; font-size: 12px; }
 .download-button {
-  grid-column: 2 / 4;
-  justify-self: start;
   padding: 8px 12px;
   color: #625a56;
   background: rgba(255, 255, 255, .55);
@@ -594,6 +592,10 @@ a:focus-visible, button:focus-visible {
   font-size: 11px;
   white-space: nowrap;
 }
+.resource-actions { grid-column: 2 / 4; display: flex; flex-wrap: wrap; gap: 8px; }
+.download-button-primary { color: var(--white); background: var(--ink); }
+.download-button:hover { background: rgba(255, 255, 255, .9); }
+.download-button-primary:hover { background: #373230; }
 .placeholder-note { margin-top: 28px; color: #7d746f; font-size: 12px; }
 
 /* About and policy */

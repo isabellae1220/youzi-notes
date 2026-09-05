@@ -40,3 +40,7 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+/tsconfig.tsbuildinfo
+/scripts/convert_office_to_pdf.py
+/scripts/convert_office_with_macos.py
+/scripts/process_course_materials.py

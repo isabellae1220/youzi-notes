@@ -35,6 +35,16 @@ test("renders the course shelf", async () => {
   assert.match(html, /理学院/);
 });
 
+test("renders real course resources with preview and download links", async () => {
+  const response = await render("/courses/operating-systems");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /操作系统笔记/);
+  assert.match(html, /在线预览/);
+  assert.match(html, /下载 PDF/);
+  assert.match(html, /\/files\/resources\/operating-systems\//);
+});
+
 test("renders the project policy and copyright boundaries", async () => {
   const response = await render("/about");
   assert.equal(response.status, 200);
