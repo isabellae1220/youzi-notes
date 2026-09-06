@@ -56,6 +56,19 @@ test("renders the anonymous modern Chinese history resources", async () => {
   assert.match(html, /\/files\/resources\/modern-chinese-history\//);
 });
 
+test("renders the renamed and newly added physics lab resources", async () => {
+  const response = await render("/courses/physics-lab-1");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /19-20期末试卷/);
+  assert.match(html, /2023-2024期末试卷/);
+  assert.match(html, /扭摆法测量物体的转动惯量/);
+  assert.match(html, /数字示波器的调节和使用/);
+  assert.match(html, /双臂电桥测量低电阻/);
+  assert.match(html, /分光计的调节与使用/);
+  assert.doesNotMatch(html, /1776280225380-1cc36589-fdd3-4426-aeb2-a72af33e3a7e/);
+});
+
 test("renders the project policy and copyright boundaries", async () => {
   const response = await render("/about");
   assert.equal(response.status, 200);
