@@ -11,33 +11,15 @@ interface StoredResource {
   writeHttpMetadata(headers: Headers): void;
 }
 
-interface UploadedPart {
-  partNumber: number;
-  etag: string;
-}
-
-interface MultipartResourceUpload {
-  uploadId: string;
-  uploadPart(partNumber: number, value: ReadableStream | ArrayBuffer): Promise<UploadedPart>;
-  complete(parts: UploadedPart[]): Promise<StoredResource>;
-  abort(): Promise<void>;
-}
-
 interface ResourceBucket {
   head(key: string): Promise<StoredResource | null>;
   get(key: string, options?: { onlyIf?: Headers; range?: Headers }): Promise<StoredResource | null>;
-  createMultipartUpload(key: string, options?: {
-    httpMetadata?: { contentType?: string; contentDisposition?: string };
-    customMetadata?: Record<string, string>;
-  }): Promise<MultipartResourceUpload>;
-  resumeMultipartUpload(key: string, uploadId: string): MultipartResourceUpload;
 }
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
   DB: unknown;
   RESOURCES?: ResourceBucket;
-  RESOURCE_UPLOAD_TOKEN?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -46,12 +28,6 @@ interface Env {
     };
   };
 }
-
-const APPROVED_UPLOAD_KEYS = new Set([
-  "resources/college-physics-2/d30dabb80fcb8d852895bb7b.pdf",
-  "resources/modern-chinese-history/2722bec0ab47c71706b4b88c.pdf",
-  "resources/modern-chinese-history/efc7424f63d250d3d30b7e5e.pdf",
-]);
 
 function objectKey(pathname: string, prefix: string) {
   const encoded = pathname.slice(prefix.length);
@@ -110,49 +86,6 @@ async function serveResource(request: Request, env: Env, url: URL) {
   return new Response(object.body, { status, headers });
 }
 
-async function uploadApprovedResource(request: Request, env: Env, url: URL) {
-  if (!env.RESOURCES || !env.RESOURCE_UPLOAD_TOKEN) return new Response("Not found", { status: 404 });
-  if (request.headers.get("authorization") !== `Bearer ${env.RESOURCE_UPLOAD_TOKEN}`) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-  const key = objectKey(url.pathname, "/__resource-upload/");
-  if (!APPROVED_UPLOAD_KEYS.has(key)) return new Response("Not found", { status: 404 });
-  const action = url.searchParams.get("action");
-
-  if (request.method === "POST" && action === "create") {
-    const metadata = await request.json() as { fileName?: string; sha256?: string };
-    if (!metadata.fileName || !metadata.sha256) return new Response("Bad request", { status: 400 });
-    const upload = await env.RESOURCES.createMultipartUpload(key, {
-      httpMetadata: { contentType: "application/pdf" },
-      customMetadata: { fileName: metadata.fileName, sha256: metadata.sha256 },
-    });
-    return Response.json({ uploadId: upload.uploadId });
-  }
-
-  const uploadId = url.searchParams.get("uploadId");
-  if (!uploadId) return new Response("Bad request", { status: 400 });
-  const upload = env.RESOURCES.resumeMultipartUpload(key, uploadId);
-
-  if (request.method === "PUT" && action === "part") {
-    const partNumber = Number(url.searchParams.get("partNumber"));
-    if (!Number.isInteger(partNumber) || partNumber < 1 || !request.body) {
-      return new Response("Bad request", { status: 400 });
-    }
-    return Response.json(await upload.uploadPart(partNumber, request.body));
-  }
-  if (request.method === "POST" && action === "complete") {
-    const body = await request.json() as { parts?: UploadedPart[] };
-    if (!Array.isArray(body.parts) || body.parts.length === 0) return new Response("Bad request", { status: 400 });
-    await upload.complete(body.parts);
-    return Response.json({ ok: true });
-  }
-  if (request.method === "DELETE" && action === "abort") {
-    await upload.abort();
-    return Response.json({ ok: true });
-  }
-  return new Response("Method not allowed", { status: 405 });
-}
-
 interface ExecutionContext {
   waitUntil(promise: Promise<unknown>): void;
   passThroughOnException(): void;
@@ -180,7 +113,6 @@ const worker = {
     }
 
     if (url.pathname.startsWith("/files/")) return serveResource(request, env, url);
-    if (url.pathname.startsWith("/__resource-upload/")) return uploadApprovedResource(request, env, url);
 
     return handler.fetch(request, env, ctx);
   },
