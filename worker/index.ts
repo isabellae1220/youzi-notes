@@ -26,6 +26,7 @@ interface MultipartResourceUpload {
 interface ResourceBucket {
   head(key: string): Promise<StoredResource | null>;
   get(key: string, options?: { onlyIf?: Headers; range?: Headers }): Promise<StoredResource | null>;
+  delete(key: string): Promise<void>;
   createMultipartUpload(key: string, options?: {
     httpMetadata?: { contentType?: string; contentDisposition?: string };
     customMetadata?: Record<string, string>;
@@ -53,6 +54,50 @@ const APPROVED_UPLOAD_KEYS = new Set([
   "resources/physics-lab-1/168e20dd6d7a274add7eead7.pdf",
   "resources/physics-lab-1/dbaaa7929e3df66e7e5bc145.pdf",
   "resources/physics-lab-1/8fc98dc4d134b05b73884280.pdf",
+  "resources/college-physics-1/7e41a650ce35fec121c90f17.pdf",
+]);
+
+const APPROVED_DELETE_KEYS = new Set([
+"resources/college-physics-1/060be256f5175018b1a4f1a1.pdf",
+  "resources/college-physics-1/9220c85e8399b63fc337a47f.pdf",
+  "resources/college-physics-1/ee3b1eee694d762cb9290234.pdf",
+  "resources/college-physics-1/6affc675caabf163ce61a863.pdf",
+  "resources/college-physics-1/596bb40b3df16212c7091db0.pdf",
+  "resources/college-physics-1/717518b26d8c54180d425932.pdf",
+  "resources/college-physics-1/f3dc769dfb85d0c8853afe1f.pdf",
+  "resources/college-physics-1/79a55a4f6783a5be8bfc47af.pdf",
+  "resources/college-physics-1/f9c4b1c79b170a4cd974b97b.pdf",
+  "resources/college-physics-1/3e773ea130eaec8036dbad33.pdf",
+  "resources/college-physics-1/776d32a9afa18eed3c5b48b6.pdf",
+  "resources/college-physics-1/80d3eec369c1705da1712498.pdf",
+  "resources/college-physics-1/8f5602088f9e5702849e622b.pdf",
+  "resources/college-physics-1/97e39894050ea18027460a27.pdf",
+  "resources/college-physics-1/c0efc94d7ea0569e18cb3405.pdf",
+  "resources/college-physics-1/ae92eee1893699a47e0666ab.pdf",
+  "resources/college-physics-1/1a9df30b21b6eefc8ea16188.pdf",
+  "resources/college-physics-1/55712603b3d2314440ebcd23.pdf",
+  "resources/college-physics-1/7f9134c2adc8917e5c6319cb.pdf",
+  "resources/college-physics-1/d44440d46cf72b911d53f47c.pdf",
+  "resources/college-physics-1/e38b84e140577278aa0a4f64.pdf",
+  "resources/college-physics-1/636e4f5916c2dd705b84be49.pdf",
+  "resources/college-physics-1/cd1df03a9346cf769008c875.pdf",
+  "resources/college-physics-1/1adfa2d1b14cd0be123a1d28.pdf",
+  "resources/college-physics-1/126150c8d7ff9bdcd1e93eb1.pdf",
+  "resources/college-physics-1/98bf828c2791695f94a5dcf3.pdf",
+  "resources/college-physics-1/6abaacda4d0471d33a37230c.pdf",
+  "resources/college-physics-1/4208e6aef2ca62edeeeb439e.pdf",
+  "resources/college-physics-1/dcba73d1dbe888a66c614b0a.pdf",
+  "resources/college-physics-1/8761011749610af5900e4649.pdf",
+  "resources/college-physics-1/b038641268d7e51d96de5890.pdf",
+  "resources/college-physics-1/0952621aca671abd2c6f1bde.pdf",
+  "resources/college-physics-1/9a95a35bbdbd2db766b78a79.pdf",
+  "resources/college-physics-1/7305a8f85432996fed583a2b.pdf",
+  "resources/college-physics-1/d6b4028fb3236bcd7f04e823.pdf",
+  "resources/college-physics-1/574bf0613aa930829ccd4f18.pdf",
+  "resources/college-physics-1/3c77643d288c751f8a8e82c9.pdf",
+  "resources/college-physics-1/b00787e0ca0f82b144ca5928.pdf",
+  "resources/college-physics-1/0153b3788ecf9415a407f01c.pdf",
+  "resources/college-physics-1/2fd51caaa3f1c3dd1a6491bb.pdf",
 ]);
 
 function objectKey(pathname: string, prefix: string) {
@@ -118,8 +163,12 @@ async function uploadApprovedResource(request: Request, env: Env, url: URL) {
     return new Response("Unauthorized", { status: 401 });
   }
   const key = objectKey(url.pathname, "/__resource-upload/");
-  if (!APPROVED_UPLOAD_KEYS.has(key)) return new Response("Not found", { status: 404 });
   const action = url.searchParams.get("action");
+  if (request.method === "DELETE" && action === "delete" && APPROVED_DELETE_KEYS.has(key)) {
+    await env.RESOURCES.delete(key);
+    return Response.json({ ok: true });
+  }
+  if (!APPROVED_UPLOAD_KEYS.has(key)) return new Response("Not found", { status: 404 });
 
   if (request.method === "POST" && action === "create") {
     const metadata = await request.json() as { fileName?: string; sha256?: string };

@@ -69,6 +69,17 @@ test("renders the renamed and newly added physics lab resources", async () => {
   assert.doesNotMatch(html, /1776280225380-1cc36589-fdd3-4426-aeb2-a72af33e3a7e/);
 });
 
+test("renders only exams, the workbook, and the new notes for college physics 1", async () => {
+  const response = await render("/courses/college-physics-1");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /大物上笔记/);
+  assert.match(html, /大物活页/);
+  assert.match(html, /2024大物上期末卷/);
+  assert.doesNotMatch(html, /§1\.1 质点运动的描述/);
+  assert.doesNotMatch(html, /§8\.6 位移电流/);
+});
+
 test("renders the project policy and copyright boundaries", async () => {
   const response = await render("/about");
   assert.equal(response.status, 200);
