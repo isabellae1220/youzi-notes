@@ -363,6 +363,7 @@ a:focus-visible, button:focus-visible {
 .bento-1 { color: #4e3033; background: var(--pink); }
 .bento-2 { color: #574124; background: var(--apricot); }
 .bento-3 { color: #3f3a70; background: var(--purple); }
+.bento-4 { color: #304b3b; background: var(--green); }
 .bento-top { display: flex; justify-content: space-between; align-items: center; }
 .bento-top span {
   display: grid;

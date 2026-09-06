@@ -22,6 +22,12 @@ test("uses the custom domain for social metadata", async () => {
   assert.doesNotMatch(page, /chatgpt\.site/);
 });
 
+test("cycles all four homepage course-card colors", async () => {
+  const page = await html("index.html");
+  assert.match(page, /bento-course bento-4/);
+  assert.ok((page.match(/bento-course bento-1/g) ?? []).length > 1);
+});
+
 test("keeps same-origin PDF preview and browser downloads", async () => {
   const page = await html("courses/operating-systems/index.html");
   assert.match(page, /href="\/files\/resources\/operating-systems\//);

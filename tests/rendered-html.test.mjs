@@ -22,6 +22,8 @@ test("renders the 柚子 Notes homepage with its core navigation", async () => {
   assert.match(html, /数据库/);
   assert.match(html, /操作系统/);
   assert.match(html, /物理实验/);
+  assert.match(html, /bento-course bento-4/);
+  assert.ok((html.match(/bento-course bento-1/g) ?? []).length > 1);
   assert.match(html, /https:\/\/njupt-youzi\.top\/og\.png/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
