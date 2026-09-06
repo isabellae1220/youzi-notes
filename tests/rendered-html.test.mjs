@@ -45,6 +45,17 @@ test("renders real course resources with preview and download links", async () =
   assert.match(html, /\/files\/resources\/operating-systems\//);
 });
 
+test("renders the anonymous modern Chinese history resources", async () => {
+  const response = await render("/courses/modern-chinese-history");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /中国近现代史纲要/);
+  assert.match(html, /中国近代史复习提纲/);
+  assert.match(html, /近代史知识点整合/);
+  assert.doesNotMatch(html, /项易/);
+  assert.match(html, /\/files\/resources\/modern-chinese-history\//);
+});
+
 test("renders the project policy and copyright boundaries", async () => {
   const response = await render("/about");
   assert.equal(response.status, 200);

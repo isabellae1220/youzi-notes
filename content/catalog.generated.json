@@ -129,6 +129,14 @@
       "accent": "rose"
     },
     {
+      "id": "modern-chinese-history",
+      "name": "中国近现代史纲要",
+      "college": "马克思主义学院",
+      "description": "中国近现代史复习提纲与知识点整理。",
+      "icon": "HIS",
+      "accent": "apricot"
+    },
+    {
       "id": "practical-writing",
       "name": "应用文写作",
       "college": "公共课程",
@@ -1413,6 +1421,20 @@
       "sourceRelativePath": "大物下/2023~2024大物下期末卷答案.pdf"
     },
     {
+      "id": "college-physics-2-d30dabb80fcb8d85",
+      "courseId": "college-physics-2",
+      "title": "大物下同步练习册答案",
+      "type": "exercise",
+      "description": "章节习题与练习资料",
+      "format": "pdf",
+      "updatedAt": "09.06",
+      "objectKey": "resources/college-physics-2/d30dabb80fcb8d852895bb7b.pdf",
+      "fileName": "大物下同步练习册答案.pdf",
+      "size": 20570250,
+      "sha256": "d30dabb80fcb8d852895bb7b2a8bbea5bafffad4909e566f2b630d0d638f7b3a",
+      "sourceRelativePath": "大物下/大物下同步练习册答案.pdf"
+    },
+    {
       "id": "college-physics-2-05e2716c428549c9",
       "courseId": "college-physics-2",
       "title": "大物活页_清除手写",
@@ -1971,6 +1993,34 @@
       "size": 749157,
       "sha256": "7636ed85fed5c73dc572eaac7ee5375a02dd9b539f51bbe1af0b07b6d4233a6b",
       "sourceRelativePath": "马原/马原2024~2025考点(3).pdf"
+    },
+    {
+      "id": "modern-chinese-history-2722bec0ab47c717",
+      "courseId": "modern-chinese-history",
+      "title": "中国近代史复习提纲",
+      "type": "summary",
+      "description": "课程复习与参考资料",
+      "format": "pdf",
+      "updatedAt": "09.06",
+      "objectKey": "resources/modern-chinese-history/2722bec0ab47c71706b4b88c.pdf",
+      "fileName": "中国近代史复习提纲.pdf",
+      "size": 175563,
+      "sha256": "2722bec0ab47c71706b4b88ce4cb690904cb4b4310ab072ab3a50d07ef7a806d",
+      "sourceRelativePath": "近代史/中国近代史复习提纲.pdf"
+    },
+    {
+      "id": "modern-chinese-history-efc7424f63d250d3",
+      "courseId": "modern-chinese-history",
+      "title": "近代史知识点整合",
+      "type": "summary",
+      "description": "课程复习与参考资料",
+      "format": "pdf",
+      "updatedAt": "09.06",
+      "objectKey": "resources/modern-chinese-history/efc7424f63d250d3d30b7e5e.pdf",
+      "fileName": "近代史知识点整合.pdf",
+      "size": 351834,
+      "sha256": "efc7424f63d250d3d30b7e5e31aa5b79837c56d404e37b4c58799959152d2fc0",
+      "sourceRelativePath": "近代史/近代史知识点整合.pdf"
     },
     {
       "id": "practical-writing-288481bfb9d68f9e",

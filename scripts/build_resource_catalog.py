@@ -28,6 +28,7 @@ COURSES = {
     "物理实验下": ("physics-lab-2", "物理实验（下）", "理学院", "LAB2", "purple", "物理实验下册报告、题目与复习资料。"),
     "数电": ("digital-electronics", "数字电路", "电子与光学工程学院", "DE", "green", "数字电路复习、习题解答与历年试卷。"),
     "马原": ("marxism-principles", "马克思主义基本原理", "马克思主义学院", "MARX", "rose", "课程重点与期末复习资料。"),
+    "近代史": ("modern-chinese-history", "中国近现代史纲要", "马克思主义学院", "HIS", "apricot", "中国近现代史复习提纲与知识点整理。"),
     "应用文写作": ("practical-writing", "应用文写作", "公共课程", "WRITE", "apricot", "应用文写作参考资料。"),
 }
 
