@@ -30,11 +30,21 @@ npm run build
 node --test tests/rendered-html.test.mjs
 ```
 
+准备腾讯云 COS 静态部署目录：
+
+```bash
+npm run build:cos
+npm run prepare:cos
+node --test tests/static-export.test.mjs
+```
+
+生成的 `cos-deploy/` 包含静态网站和经过大小、SHA-256 校验的公开 PDF，不提交到 Git。生产域名切换前必须先在临时地址完成验证。
+
 ## 技术栈
 
 - React、Next.js、TypeScript
 - Tailwind CSS 与自有 CSS
-- Cloudflare Workers 与 R2 对象存储
+- 腾讯云中国香港 COS 与中国境外 CDN（迁移中）
 - 内容目录静态生成
 
 ## 许可与内容边界

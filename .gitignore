@@ -17,6 +17,7 @@
 /.next/
 /.vinext/
 /out/
+/cos-deploy/
 
 # misc
 .DS_Store

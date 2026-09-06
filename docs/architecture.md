@@ -13,8 +13,8 @@
 - Tailwind CSS 与项目自有样式变量
 - 课程与资料使用结构化数据管理
 - 笔记内容后续使用 Markdown/MDX
-- PDF 等大文件保存在外部对象存储，仓库只记录链接
-- 部署采用静态优先方式
+- PDF 等大文件保存在外部对象存储，仓库只记录目录元数据
+- 页面提供 Next.js 静态导出，生产迁移目标为腾讯云中国香港 COS + 中国境外 CDN
 
 ## 内容原则
 
@@ -48,6 +48,14 @@
 - `/courses/[id]`：课程详情和资料列表
 - `/about`：项目说明、版权与使用规则
 - `/contribute`：Issue 与 Pull Request 贡献指引
+
+## COS 静态部署
+
+- `npm run build:cos` 将全部公开路由预渲染到 `out/`，课程详情由 `generateStaticParams` 生成。
+- `npm run prepare:cos` 校验目录中每份 PDF 的大小和 SHA-256，并生成仅用于上传的 `cos-deploy/`。
+- 网站文件和资料对象保持同源；PDF 路径为 `/files/resources/<course>/<hash>.pdf`，避免浏览器跨域。
+- COS 静态网站使用 `index.html`、`404.html`、尾斜杠路由和忽略 HTML 扩展名。
+- 未完成全部页面、PDF、HTTPS 与多网络验证前，不切换生产域名 DNS。
 
 ## 未来扩展边界
 
