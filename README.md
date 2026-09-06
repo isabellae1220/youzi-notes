@@ -6,7 +6,7 @@
 
 ## 在线访问
 
-[https://yuzu-notes.isabellae1220.chatgpt.site](https://yuzu-notes.isabellae1220.chatgpt.site)
+[https://njupt-youzi.top](https://njupt-youzi.top)
 
 ## 参与贡献
 
