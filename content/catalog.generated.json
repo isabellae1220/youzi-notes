@@ -143,6 +143,14 @@
       "description": "应用文写作参考资料。",
       "icon": "WRITE",
       "accent": "apricot"
+    },
+    {
+      "id": "calculus-overview",
+      "name": "高等数学（上下知识概览）",
+      "college": "理学院",
+      "description": "高等数学上下册知识概览。",
+      "icon": "MA",
+      "accent": "amber"
     }
   ],
   "resources": [
@@ -1559,6 +1567,20 @@
       "size": 65049348,
       "sha256": "288481bfb9d68f9e70a0608b0bb76c074ee3d6a728762f65aa2f8e7418c0515d",
       "sourceRelativePath": "应用文写作/新编应用文写作教程_第3版_15330416.pdf"
+    },
+    {
+      "id": "calculus-overview-04ca5334290e47ab",
+      "courseId": "calculus-overview",
+      "title": "高等数学知识概览",
+      "type": "summary",
+      "description": "高等数学上下册知识概览梳理",
+      "format": "pdf",
+      "updatedAt": "09.09",
+      "objectKey": "resources/calculus-overview/04ca5334290e47ab.pdf",
+      "fileName": "高等数学知识概览.pdf",
+      "size": 3156137,
+      "sha256": "a16c2e6377bdecef8265ff195a912b858a2968b4bb95436301a715d9e35c9d94",
+      "sourceRelativePath": "calculus-overview/高等数学知识概览.pdf"
     }
   ]
 }
