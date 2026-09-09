@@ -121,6 +121,14 @@
       "accent": "green"
     },
     {
+      "id": "qm-solid-physics",
+      "name": "量子与固体物理",
+      "college": "电子与光学工程学院",
+      "description": "量子力学与固体物理综合课程笔记。",
+      "icon": "QM",
+      "accent": "purple"
+    },
+    {
       "id": "marxism-principles",
       "name": "马克思主义基本原理",
       "college": "马克思主义学院",
@@ -1503,6 +1511,20 @@
       "size": 921710,
       "sha256": "206c0be68e7fab356aeb3e96eb9aae06c2a4fb88c317cb6cb05616132eb7c798",
       "sourceRelativePath": "数电/数电B习题解答.pdf"
+    },
+    {
+      "id": "qm-solid-physics-d5bd908455b3b53f",
+      "courseId": "qm-solid-physics",
+      "title": "量子与固体物理期末复习笔记",
+      "type": "note",
+      "description": "同学整理的课程笔记",
+      "format": "pdf",
+      "updatedAt": "09.09",
+      "objectKey": "resources/qm-solid-physics/d5bd908455b3b53f195d17ca.pdf",
+      "fileName": "量子与固体物理期末复习笔记.pdf",
+      "size": 6225222,
+      "sha256": "d5bd908455b3b53f195d17cab7d2f983ffea99371cf1608c7e09d1e27b6ff0f2",
+      "sourceRelativePath": "量子与固体物理/量子与固体物理期末复习笔记.pdf"
     },
     {
       "id": "marxism-principles-7636ed85fed5c73d",
