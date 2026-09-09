@@ -1559,6 +1559,20 @@
       "size": 65049348,
       "sha256": "288481bfb9d68f9e70a0608b0bb76c074ee3d6a728762f65aa2f8e7418c0515d",
       "sourceRelativePath": "应用文写作/新编应用文写作教程_第3版_15330416.pdf"
+    },
+    {
+      "id": "digital-electronics-21eee613f56c4dbd",
+      "courseId": "digital-electronics",
+      "title": "数字电路期末复习笔记",
+      "type": "summary",
+      "description": "数字电路期末复习总结笔记",
+      "format": "pdf",
+      "updatedAt": "09.09",
+      "objectKey": "resources/digital-electronics/21eee613f56c4dbd.pdf",
+      "fileName": "数字电路期末复习笔记.pdf",
+      "size": 5249923,
+      "sha256": "f89db469b9d09aaefd2bb6aa0cba30d4a1581c6f56bf00518c54028cc24d4ffa",
+      "sourceRelativePath": "digital-electronics/数字电路期末复习笔记.pdf"
     }
   ]
 }
