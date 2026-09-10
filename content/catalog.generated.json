@@ -159,14 +159,6 @@
       "description": "应用文写作参考资料。",
       "icon": "WRITE",
       "accent": "apricot"
-    },
-    {
-      "id": "calculus-a",
-      "name": "高等数学（上下）",
-      "college": "理学院",
-      "description": "高等数学上下册课程笔记。",
-      "icon": "MA",
-      "accent": "amber"
     }
   ],
   "resources": [
@@ -1653,20 +1645,6 @@
       "size": 65049348,
       "sha256": "288481bfb9d68f9e70a0608b0bb76c074ee3d6a728762f65aa2f8e7418c0515d",
       "sourceRelativePath": "应用文写作/新编应用文写作教程_第3版_15330416.pdf"
-    },
-    {
-      "id": "calculus-a-08510431f3c4407c",
-      "courseId": "calculus-a",
-      "title": "高等数学A笔记",
-      "type": "summary",
-      "description": "高等数学上下册课程笔记",
-      "format": "pdf",
-      "updatedAt": "09.09",
-      "objectKey": "resources/calculus-a/08510431f3c4407c.pdf",
-      "fileName": "高等数学A笔记.pdf",
-      "size": 11247991,
-      "sha256": "c4cc855868b7bebad77936f399eb5dffae96c7872403272a6487341a49422242",
-      "sourceRelativePath": "calculus-a/高等数学A笔记.pdf"
     }
   ]
 }
