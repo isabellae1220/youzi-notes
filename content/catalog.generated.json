@@ -159,6 +159,14 @@
       "description": "应用文写作参考资料。",
       "icon": "WRITE",
       "accent": "apricot"
+    },
+    {
+      "id": "physical-optics",
+      "name": "物理光学",
+      "college": "电子与光学工程学院",
+      "description": "物理光学课程笔记。",
+      "icon": "PO",
+      "accent": "blue"
     }
   ],
   "resources": [
@@ -1645,6 +1653,20 @@
       "size": 65049348,
       "sha256": "288481bfb9d68f9e70a0608b0bb76c074ee3d6a728762f65aa2f8e7418c0515d",
       "sourceRelativePath": "应用文写作/新编应用文写作教程_第3版_15330416.pdf"
+    },
+    {
+      "id": "physical-optics-1c8985a067884cad",
+      "courseId": "physical-optics",
+      "title": "物理光学期末复习笔记",
+      "type": "summary",
+      "description": "物理光学期末复习总结笔记",
+      "format": "pdf",
+      "updatedAt": "09.09",
+      "objectKey": "resources/physical-optics/1c8985a067884cad.pdf",
+      "fileName": "物理光学期末复习笔记.pdf",
+      "size": 25073386,
+      "sha256": "c0c4273a075ba7a32c7ad6a980b9d69e8524ad362ca3915c897378dd9903e7f9",
+      "sourceRelativePath": "physical-optics/物理光学期末复习笔记.pdf"
     }
   ]
 }
