@@ -121,6 +121,14 @@
       "accent": "green"
     },
     {
+      "id": "physical-optics",
+      "name": "物理光学",
+      "college": "电子与光学工程学院",
+      "description": "物理光学课程笔记与期末复习资料。",
+      "icon": "OPT",
+      "accent": "rose"
+    },
+    {
       "id": "qm-solid-physics",
       "name": "量子与固体物理",
       "college": "电子与光学工程学院",
@@ -967,6 +975,20 @@
       "sourceRelativePath": "高数上/高等数学A上.pdf"
     },
     {
+      "id": "calculus-1-c4cc855868b7beba",
+      "courseId": "calculus-1",
+      "title": "高等数学上下册笔记",
+      "type": "note",
+      "description": "同学整理的课程笔记",
+      "format": "pdf",
+      "updatedAt": "09.10",
+      "objectKey": "resources/calculus-1/c4cc855868b7bebad77936f3.pdf",
+      "fileName": "高等数学上下册笔记.pdf",
+      "size": 11247991,
+      "sha256": "c4cc855868b7bebad77936f399eb5dffae96c7872403272a6487341a49422242",
+      "sourceRelativePath": "高数上/高等数学上下册笔记.pdf"
+    },
+    {
       "id": "calculus-2-fd12f34df230eed8",
       "courseId": "calculus-2",
       "title": "2023~2024高数AII期末卷",
@@ -1049,6 +1071,20 @@
       "size": 12443479,
       "sha256": "da73358e3b90d838f59db24435cb1ab741bf2d549576dd4137154b1fb9d1ce10",
       "sourceRelativePath": "高数下/高数下练习册答案 (1).pdf"
+    },
+    {
+      "id": "calculus-2-c4cc855868b7beba",
+      "courseId": "calculus-2",
+      "title": "高等数学上下册笔记",
+      "type": "note",
+      "description": "同学整理的课程笔记",
+      "format": "pdf",
+      "updatedAt": "09.10",
+      "objectKey": "resources/calculus-2/c4cc855868b7bebad77936f3.pdf",
+      "fileName": "高等数学上下册笔记.pdf",
+      "size": 11247991,
+      "sha256": "c4cc855868b7bebad77936f399eb5dffae96c7872403272a6487341a49422242",
+      "sourceRelativePath": "高数下/高等数学上下册笔记.pdf"
     },
     {
       "id": "probability-dbee6525cc8a894b",
@@ -1499,6 +1535,20 @@
       "sourceRelativePath": "数电/48数电复习.pdf"
     },
     {
+      "id": "digital-electronics-f89db469b9d09aae",
+      "courseId": "digital-electronics",
+      "title": "数字电路笔记",
+      "type": "note",
+      "description": "同学整理的课程笔记",
+      "format": "pdf",
+      "updatedAt": "09.10",
+      "objectKey": "resources/digital-electronics/f89db469b9d09aaefd2bb6aa.pdf",
+      "fileName": "数字电路笔记.pdf",
+      "size": 5249923,
+      "sha256": "f89db469b9d09aaefd2bb6aa0cba30d4a1581c6f56bf00518c54028cc24d4ffa",
+      "sourceRelativePath": "数电/数字电路笔记.pdf"
+    },
+    {
       "id": "digital-electronics-206c0be68e7fab35",
       "courseId": "digital-electronics",
       "title": "数电B习题解答",
@@ -1511,6 +1561,20 @@
       "size": 921710,
       "sha256": "206c0be68e7fab356aeb3e96eb9aae06c2a4fb88c317cb6cb05616132eb7c798",
       "sourceRelativePath": "数电/数电B习题解答.pdf"
+    },
+    {
+      "id": "physical-optics-c0c4273a075ba7a3",
+      "courseId": "physical-optics",
+      "title": "物理光学期末复习笔记",
+      "type": "note",
+      "description": "同学整理的课程笔记",
+      "format": "pdf",
+      "updatedAt": "09.10",
+      "objectKey": "resources/physical-optics/c0c4273a075ba7a32c7ad6a9.pdf",
+      "fileName": "物理光学期末复习笔记.pdf",
+      "size": 25073386,
+      "sha256": "c0c4273a075ba7a32c7ad6a980b9d69e8524ad362ca3915c897378dd9903e7f9",
+      "sourceRelativePath": "物理光学/物理光学期末复习笔记.pdf"
     },
     {
       "id": "qm-solid-physics-d5bd908455b3b53f",
